@@ -21,5 +21,5 @@ def mask_account_card(num_card_account: str | int) -> str:
     return f"{list_alpha} {list_summ}"
 
 
-def get_date(date):
+def get_date(date: str) -> str:
     return f"{date[8:10]}.{date[5:7]}.{date[0:4]}"
