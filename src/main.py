@@ -21,7 +21,7 @@ def clear_names(file_name: str) -> list:
 
 
 def save_to_file(file_name: str, data: list) -> None:
-    """Сохранение данных в файл"""
+    """Сохранение данных в файлОВ"""
     with open("data/" + file_name, "w", encoding="utf-8") as names_file:
         names_file.write("\n".join(data))
 

@@ -1,5 +1,5 @@
 def mask_account_card(num_card_account: str | int) -> str:
-
+    """функция маскировкиномера аккаунта или номера карты"""
     num_card_account = str(num_card_account)
     list_alpha = ""
     list_num = ""
@@ -22,4 +22,5 @@ def mask_account_card(num_card_account: str | int) -> str:
 
 
 def get_date(date: str) -> str:
+    """функция преобразования даты"""
     return f"{date[8:10]}.{date[5:7]}.{date[0:4]}"
