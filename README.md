@@ -12,7 +12,7 @@ git clone https://github.com/terpi228/PythonProject.git
 ```bash
 cd PythonProject
 ```
-## Использование
+## Использование  
 
 *
 ```python
