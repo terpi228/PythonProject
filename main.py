@@ -1,19 +1,11 @@
-from src.masks import get_mask_account, get_mask_card_number
-from src.widget import get_date, mask_account_card
-from src.processing import sort_by_date, filter_by_state
-from tests.test_processing import TEST_DATA
+from src.generators import filter_by_currency, print_operations, card_number_generator
+from data.test_opertations import operations
 
 
-print(
-    # get_mask_card_number(int(input("номер карты  \n"))),
-    # get_mask_account(int(input("номер аккаунта  \n"))),
+conclusion = print_operations(filter_by_currency(operations, "USD"))
 
-    # mask_account_card(input("введите номер аккаунта или карты  \n")),
-    # get_date(input("введите дату\n")),
-
-    filter_by_state(TEST_DATA),
-    sort_by_date(TEST_DATA, 'date'),
-)
 
 if __name__ == "__main__":
-    pass
+
+    for card_number in card_number_generator(1, 5):
+        print(card_number)
