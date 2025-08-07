@@ -12,25 +12,39 @@ git clone https://github.com/terpi228/PythonProject.git
 ```bash
 cd PythonProject
 ```
-## Использование  
+## Использование
 
-*
+1. Установите зависимости:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Запустите основной скрипт:
+    ```bash
+    python main.py
+    ```
+3. Для фильтрации операций по умолчанию (EXECUTED):
+    ```python
+    from processing import filter_by_state
+    filtered_data = filter_by_state(TEST_DATA)
+    ```
+4. Для сортировки по дате:
+    ```python
+    from processing import sort_by_date
+    sorted_data = sort_by_date(TEST_DATA)
+    ```
+*так же код выводит сортировку по дате(**сначало новые**) + параметру state*
+
+## Примеры ввода
+файл имеет TEST_DATA FIle для примера
+
 ```python
-from src.masks import get_mask_account, get_mask_card_number
-from src.widget import mask_account_card
-```
-* Маскирование карты (16 цифр)\
-```python
-print(get_mask_card_number("1234567812345678"))  # "1234 56** **** 5678"
-```
-* Маскирование счета (20 цифр)
-```python
-print(get_mask_account("12345678901234567890"))  # "**7890"
-```
-* Автоматическое определение типа
-```python
-print(mask_account_card("Visa 1234567812345678"))  # "Visa 1234 56** **** 5678"
-```
+TEST_DATA = [
+    {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+    {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+    {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+    {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+]
+   ```
 
 ## Обработка транзакций
 ```python
