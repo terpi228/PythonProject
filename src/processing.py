@@ -1,8 +1,8 @@
-def filter_by_state(users_information: list[dict], state: str ="EXECUTED") -> list[dict]:
-    """сортировка списка по state"""
-    return [t for t in users_information if t['state'] == state]
+def filter_by_state(operations, state="EXECUTED"):
+    """Фильтрует операции по state"""
+    return [i for i in operations if i.get("state") == state]
 
 
-def sort_by_date(data, key)-> list[dict]:
-    """вывод по дате от меньшего к большему"""
-    return sorted(data, key=lambda x: x.get(key))
+def sort_by_date(operations, reverse=True):
+    """Сортирует операции по дате"""
+    return sorted(operations, key=lambda x: x["date"], reverse=reverse)
