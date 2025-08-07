@@ -1,5 +1,4 @@
 def mask_account_card(num_card_account: str | int) -> str:
-    """функция маскировкиномера аккаунта или номера карты"""
     num_card_account = str(num_card_account)
     list_alpha = ""
     list_num = ""
@@ -18,7 +17,12 @@ def mask_account_card(num_card_account: str | int) -> str:
         list_summ = f"**{list_num[-4:]}"
     else:
         return f"{list_num} не является номером аккаунта или карты!"
-    return f"{list_alpha} {list_summ}"
+
+    # Убираем лишний пробел если list_alpha пустой
+    if list_alpha:
+        return f"{list_alpha} {list_summ}"
+    else:
+        return list_summ  # Без пробела в начале!
 
 
 def get_date(date: str) -> str:
