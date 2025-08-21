@@ -1,6 +1,7 @@
 import pytest
 from typing import List, Tuple
 
+
 @pytest.fixture
 def sample_operations() -> List:
     """Фикстура с тестовыми данными операций"""
