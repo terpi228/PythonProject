@@ -1,5 +1,5 @@
 import pytest
-from src.generators import filter_by_currency, print_operations, card_number_generator
+from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
 
 
 TEST_TRANSACTIONS = [
@@ -54,31 +54,47 @@ def test_filter_by_currency_empty():
 
 
 # Тесты для print_operations
-def test_print_operations(capsys):
-    """Тест вывода операций."""
-    print_operations(TEST_TRANSACTIONS[:1])
-    captured = capsys.readouterr()
-    output = captured.out
 
-    assert "Операция #1:" in output
-    assert "ID: 939719570" in output
-    assert "Сумма: 9824.07 USD" in output
-    assert "Отправитель: Счет 75106830613657916952" in output
+import pytest
+from src.generators import transaction_descriptions
 
 
-def test_print_operations_multiple(capsys):
-    """Тест вывода нескольких операций."""
-    print_operations(TEST_TRANSACTIONS[:2])
-    captured = capsys.readouterr()
-    output = captured.out
+def test_transaction_descriptions_basic_functionality():
+    """Тест базовой функциональности генератора описаний."""
 
-    assert "Операция #1:" in output
-    assert "Операция #2:" in output
-    assert "USD" in output
-    assert "EUR" in output
+    operations = [
+        {"id": 1, "description": "Перевод организации"},
+        {"id": 2, "description": "Оплата услуг"},
+        {"id": 3, "description": "Возврат средств"}
+    ]
 
 
-# Тесты для card_number_generator
+    result = list(transaction_descriptions(operations))
+
+
+    expected = [
+        "  Описание: Перевод организации",
+        "  Описание: Оплата услуг",
+        "  Описание: Возврат средств"
+    ]
+    assert result == expected
+
+
+def test_transaction_descriptions_edge_cases():
+    """Тест граничных случаев и ошибок."""
+
+    assert list(transaction_descriptions([])) == []
+
+    with pytest.raises(KeyError):
+        list(transaction_descriptions([{"id": 1}]))
+
+    # Проверяем что это генератор (ленивые вычисления)
+    generator = transaction_descriptions([{"description": "Test"}])
+    assert hasattr(generator, '__iter__')
+    assert not isinstance(generator, list)
+
+
+
 def test_card_number_generator_basic():
     """Тест генерации номеров карт."""
     generator = card_number_generator(1, 3)
