@@ -5,20 +5,10 @@ def filter_by_currency(transactions, currency):
             yield transactions
 
 
-def print_operations(operations):
-    """Выводит информацию об операциях в форматированном виде."""
+def transaction_descriptions (operations):
+    """Генератор для формирования отчёта об операциях с использованием yield."""
     for i, op in enumerate(operations, 1):
-        print(f"Операция #{i}:")
-        print(f"  ID: {op['id']}")
-        print(f"  Статус: {op['state']}")
-        print(f"  Дата: {op['date']}")
-        print(f"  Сумма: {op['operationAmount']['amount']} {op['operationAmount']['currency']['code']}")
-        print(f"  Описание: {op['description']}")
-        if "from" in op:
-            print(f"  Отправитель: {op['from']}")
-        print(f"  Получатель: {op['to']}")
-        print("-" * 50)
-    # return print("COMMAND CORRECT")
+        yield f"  Описание: {op['description']}"
 
 
 def card_number_generator(start, end):
