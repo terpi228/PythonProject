@@ -1,15 +1,20 @@
-from src.processing import sort_by_date, filter_by_state
-from tests.test_processing import TEST_DATA
+from src.decorators import log
 
-if __name__ == "__main__":
-    print("Исходные данные:", TEST_DATA)
+@log(filename="mylog.txt")
+def add(x, y):
+    return x + y
 
-    state_filter = input("Введите state для фильтрации (ENTER для EXECUTED): ") or "EXECUTED"
-    filtered_data = filter_by_state(TEST_DATA, state_filter)
-    print("\nОтфильтрованные данные:", filtered_data)
+@log()  # Без файла - в консоль
+def divide(a, b):
+    return a / b
 
-    sorted_data = sort_by_date(TEST_DATA)
-    print("\nОтсортированные данные (новые сначала):", sorted_data)
+@log(filename="mylog.txt")
+def my_function(x, y):
+    return x + y
 
-    processed_data = sort_by_date(filter_by_state(TEST_DATA))
-    print("\nEXECUTED + сортировка:", processed_data)
+my_function(1, 2)
+
+# Тестируем
+# add(1, 2)        # Запишет "add ok" в mylog.txt
+# divide(10, 2)    # Выведет "divide ok" в консоль
+# divide(10, 0)    # Выведет ошибку в консоль
