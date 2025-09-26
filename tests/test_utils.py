@@ -1,4 +1,4 @@
-from unittest.mock import Mock, mock_open, patch
+from unittest.mock import mock_open, patch
 from src.utils import utils
 
 
@@ -16,7 +16,7 @@ class TestUtils:
         result = utils("nonexistent.json")
         assert result is False
 
-    @patch("builtins.open", mock_open(read_data='invalid json'))
+    @patch("builtins.open", mock_open(read_data="invalid json"))
     @patch("json.load", side_effect=Exception("JSON error"))
     def test_utils_json_error(self, mock_json_load):
         result = utils("bad_json.json")
