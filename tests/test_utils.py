@@ -1,4 +1,4 @@
-from unittest.mock import Mock, mock_open, patch
+from unittest.mock import mock_open, patch
 from src.utils import utils
 
 
@@ -9,14 +9,14 @@ class TestUtils:
     def test_utils_success(self, mock_json_load):
         mock_json_load.return_value = {"test": "data"}
         result = utils("test.json")
-        assert result is True
+        assert result == {"test": "data"}
 
     @patch("builtins.open", side_effect=FileNotFoundError)
     def test_utils_file_not_found(self, mock_file):
         result = utils("nonexistent.json")
         assert result is False
 
-    @patch("builtins.open", mock_open(read_data='invalid json'))
+    @patch("builtins.open", mock_open(read_data="invalid json"))
     @patch("json.load", side_effect=Exception("JSON error"))
     def test_utils_json_error(self, mock_json_load):
         result = utils("bad_json.json")
