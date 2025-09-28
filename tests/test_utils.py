@@ -1,11 +1,11 @@
 from unittest.mock import mock_open, patch
-from src.utils import utils
+from src.read_json import utils
 
 
 class TestUtils:
 
     @patch("builtins.open", mock_open(read_data='{"key": "value"}'))
-    @patch("json.load")
+    @patch("src.utils.json.load")  # Изменено с "json.load" на "src.utils.json.load"
     def test_utils_success(self, mock_json_load):
         mock_json_load.return_value = {"test": "data"}
         result = utils("test.json")
@@ -14,15 +14,15 @@ class TestUtils:
     @patch("builtins.open", side_effect=FileNotFoundError)
     def test_utils_file_not_found(self, mock_file):
         result = utils("nonexistent.json")
-        assert result is False
+        assert result == []  # Изменено с is на == для сравнения списков
 
     @patch("builtins.open", mock_open(read_data="invalid json"))
-    @patch("json.load", side_effect=Exception("JSON error"))
+    @patch("src.utils.json.load", side_effect=Exception("JSON error"))  # Изменено здесь
     def test_utils_json_error(self, mock_json_load):
         result = utils("bad_json.json")
-        assert result is False
+        assert result == []  # Изменено с is на ==
 
     @patch("builtins.open", side_effect=Exception("Unexpected error"))
     def test_utils_general_exception(self, mock_file):
         result = utils("problematic.json")
-        assert result is False
+        assert result == []  # Изменено с is на ==

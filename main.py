@@ -1,4 +1,4 @@
-from src.utils import utils
+from src.read_json import utils
 from src.external_api import external_api, test_data
 
 

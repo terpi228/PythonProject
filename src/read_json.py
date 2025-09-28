@@ -1,7 +1,7 @@
 import json
 
 
-def utils(data_file) -> bool:
+def utils(data_file) -> list:
     """Ф-ия проверяет .json файл и печатает содержимое"""
 
     try:
@@ -11,13 +11,13 @@ def utils(data_file) -> bool:
         return data
     except FileNotFoundError:
         print("Файл operations.json не найден!")
-        return False
+        return []
     except json.JSONDecodeError:
         print("Ошибка в формате JSON файла!")
-        return False
+        return []
     except Exception as e:
         print(f"Произошла ошибка: {e}")
-        return False
+        return []
 
 
 if __name__ == "__main__":
