@@ -1,11 +1,11 @@
 from unittest.mock import mock_open, patch
-from src.read_json import utils
+from src.utils import utils
 
 
 class TestUtils:
 
     @patch("builtins.open", mock_open(read_data='{"key": "value"}'))
-    @patch("src.utils.json.load")  # Изменено с "json.load" на "src.utils.json.load"
+    @patch("src.logs.json.load")  # Изменено с "json.load" на "src.logs.json.load"
     def test_utils_success(self, mock_json_load):
         mock_json_load.return_value = {"test": "data"}
         result = utils("test.json")
@@ -17,7 +17,7 @@ class TestUtils:
         assert result == []  # Изменено с is на == для сравнения списков
 
     @patch("builtins.open", mock_open(read_data="invalid json"))
-    @patch("src.utils.json.load", side_effect=Exception("JSON error"))  # Изменено здесь
+    @patch("src.logs.json.load", side_effect=Exception("JSON error"))  # Изменено здесь
     def test_utils_json_error(self, mock_json_load):
         result = utils("bad_json.json")
         assert result == []  # Изменено с is на ==

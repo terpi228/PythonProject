@@ -1,6 +1,7 @@
-from src.read_json import utils
-from src.external_api import external_api, test_data
+from src.utils import read_json
+from src.masks import get_mask_card_number, get_mask_account
 
-
-utils("data/operations.json")
-external_api(test_data[0])
+if __name__ == "__main__":
+    read_json("data/operations.json")
+    get_mask_account("1234567890")
+    get_mask_card_number('1234567890')
