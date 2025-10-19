@@ -1,7 +1,8 @@
-from src.utils import read_json
-from src.masks import get_mask_card_number, get_mask_account
+from src.read_file import read_csv_file, read_excel_file
 
-if __name__ == "__main__":
-    read_json("data/operations.json")
-    get_mask_account("1234567890")
-    get_mask_card_number('1234567890')
+if __name__ == "__main__" :
+   r_ex =  read_excel_file("data/transactions_excel.xlsx")
+   print(r_ex)
+   print("=="*50)
+   r_csv = read_csv_file("data/transactions.csv")
+   print(r_csv)
