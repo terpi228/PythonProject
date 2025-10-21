@@ -5,13 +5,11 @@ os.makedirs("logs", exist_ok=True)
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("logs/masks.log", mode='w', encoding='utf-8'),
-        logging.StreamHandler()
-    ]
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("logs/masks.log", mode="w", encoding="utf-8"), logging.StreamHandler()],
 )
 logger = logging.getLogger("masks")
+
 
 def get_mask_card_number(num_card: str | int) -> str:
     """Маскирует номер карты, оставляя первые 6 и последние 4 цифры."""
@@ -25,6 +23,7 @@ def get_mask_card_number(num_card: str | int) -> str:
     except Exception as e:
         logger.error(f"Ошибка маскировки карты ({num_card}): {e}")
         return "некорректный номер карты"
+
 
 def get_mask_account(num_account: str | int) -> str:
     try:
