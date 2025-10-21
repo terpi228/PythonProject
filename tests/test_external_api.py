@@ -1,9 +1,10 @@
-import pytest
-from unittest.mock import Mock, patch
-import sys
 import os
-from src.external_api import external_api
+import sys
+from unittest.mock import Mock, patch
 
+import pytest
+
+from src.external_api import external_api
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 

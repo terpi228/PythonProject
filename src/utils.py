@@ -23,7 +23,7 @@
 #         logger.info('Успешно!')
 #         return data
 #     except FileNotFoundError:
-#         logger.error("Файл operations.json не найден!")
+#         logger.error("Файл transactions.json не найден!")
 #         return []
 #     except json.JSONDecodeError:
 #         logger.error("Ошибка в формате JSON файла!")
@@ -34,4 +34,4 @@
 #
 #
 # if __name__ == "__main__":
-#     read_json("../data/operations.json")
+#     read_json("../data/transactions.json")
