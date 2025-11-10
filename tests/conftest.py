@@ -1,5 +1,6 @@
-import pytest
 from typing import List, Tuple
+
+import pytest
 
 
 @pytest.fixture
