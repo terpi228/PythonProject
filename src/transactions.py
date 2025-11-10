@@ -1,8 +1,9 @@
 import json
 import re
-import pandas as pd
 from datetime import datetime
-from typing import List, Dict
+from typing import Dict, List
+
+import pandas as pd
 
 
 def read_json(filename: str) -> List[Dict]:
@@ -21,8 +22,7 @@ def read_json(filename: str) -> List[Dict]:
 def read_csv(filename: str) -> List[Dict]:
     try:
         df = pd.read_csv(filename, sep=";", encoding="utf-8")
-        data = df.to_dict(orient="records")
-        return data
+        return df.to_dict(orient="records")
     except FileNotFoundError:
         print(f"Программа: файл {filename} не найден.")
         return []
@@ -47,7 +47,6 @@ def normalize_transaction(transaction: Dict) -> Dict:
     """Приводит транзакцию к единому формату."""
     normalized = transaction.copy()
 
-    # Обрабатываем JSON формат (вложенная структура)
     if "operationAmount" in transaction and isinstance(transaction["operationAmount"], dict):
         normalized["amount"] = transaction["operationAmount"].get("amount", "???")
         currency_data = transaction["operationAmount"].get("currency", {})
@@ -58,13 +57,11 @@ def normalize_transaction(transaction: Dict) -> Dict:
 
     elif "currency_name" in transaction and "currency_code" in transaction:
         normalized["amount"] = transaction.get("amount", "???")
-        # Используем название валюты, если есть, иначе код
         if transaction.get("currency_name"):
             normalized["currency"] = transaction["currency_name"]
         else:
             normalized["currency"] = transaction.get("currency_code", "")
 
-    # Если формат неизвестен, пытаемся извлечь стандартные поля
     else:
         normalized["amount"] = transaction.get("amount", "???")
         normalized["currency"] = transaction.get("currency", "")
@@ -87,27 +84,28 @@ def sort_transactions(transactions: List[Dict], sort_order: str) -> List[Dict]:
 
     def parse_date(date_str: str) -> datetime:
         try:
-            # Обрабатываем разные форматы дат
             date_str = date_str.replace("Z", "+00:00")
             return datetime.fromisoformat(date_str)
         except (ValueError, TypeError):
             return datetime(1900, 1, 1)
 
-    return sorted(transactions, key=lambda x: parse_date(str(x.get("date", ""))), reverse=reverse)
+    return sorted(
+        transactions,
+        key=lambda x: parse_date(str(x.get("date", ""))),
+        reverse=reverse,
+    )
 
 
 def filter_rub(transactions: List[Dict]) -> List[Dict]:
-    """Оставляем только рублевые операции с учетом разных форматов данных."""
+    """Оставляем только рублевые операции."""
     rub_indicators = {"rub", "руб", "₽", "rur", "российский рубль", "рублей"}
 
-    filtered_transactions = []
+    filtered = []
     for t in transactions:
         currency = str(t.get("currency", "")).lower()
-        # Проверяем все возможные варианты обозначения рубля
-        if any(rub_indicator in currency for rub_indicator in rub_indicators):
-            filtered_transactions.append(t)
-
-    return filtered_transactions
+        if any(r in currency for r in rub_indicators):
+            filtered.append(t)
+    return filtered
 
 
 def process_bank_search(data: List[Dict], search: str) -> List[Dict]:
@@ -117,10 +115,11 @@ def process_bank_search(data: List[Dict], search: str) -> List[Dict]:
 
 def print_transactions(transactions: List[Dict]) -> None:
     if not transactions:
-        print("Программа: Не найдено ни одной транзакции, подходящей под ваши условия фильтрации.")
+        print("Программа: Не найдено ни одной транзакции, " "подходящей под ваши условия фильтрации.")
         return
 
     print(f"\nПрограмма: Всего банковских операций в выборке: {len(transactions)}\n")
+
     for i, t in enumerate(transactions, 1):
         date = t.get("date", "Без даты")
         desc = t.get("description", "Без описания")
@@ -137,12 +136,12 @@ def print_transactions(transactions: List[Dict]) -> None:
 
 def main() -> None:
     print(
-"""Программа: Привет! Добро пожаловать в программу работы 
-с банковскими транзакциями. 
-Выберите необходимый пункт меню:
-1. Получить информацию о транзакциях из JSON-файла
-2. Получить информацию о транзакциях из CSV-файла
-3. Получить информацию о транзакциях из XLSX-файла"""
+        """Программа: Привет! Добро пожаловать в программу работы
+    с банковскими транзакциями.
+    Выберите необходимый пункт меню:
+    1. Получить информацию о транзакциях из JSON-файла
+    2. Получить информацию о транзакциях из CSV-файла
+    3. Получить информацию о транзакциях из XLSX-файла"""
     )
 
     choice = input("Пользователь: ").strip()
@@ -150,15 +149,15 @@ def main() -> None:
     if choice == "1":
         filepath = "data/transactions.json"
         transactions = read_json(filepath)
-        print(f"Программа: Для обработки выбран JSON-файл.")
+        print("Программа: Для обработки выбран JSON-файл.")
     elif choice == "2":
         filepath = "data/transactions.csv"
         transactions = read_csv(filepath)
-        print(f"Программа: Для обработки выбран CSV-файл.")
+        print("Программа: Для обработки выбран CSV-файл.")
     elif choice == "3":
         filepath = "data/transactions.xlsx"
         transactions = read_excel(filepath)
-        print(f"Программа: Для обработки выбран XLSX-файл.")
+        print("Программа: Для обработки выбран XLSX-файл.")
     else:
         print("Программа: Некорректный выбор.")
         return
@@ -167,42 +166,42 @@ def main() -> None:
         print("Программа: Нет данных для обработки.")
         return
 
-    # НОРМАЛИЗУЕМ ДАННЫЕ ПЕРЕД ДАЛЬНЕЙШЕЙ ОБРАБОТКОЙ
     transactions = normalize_transactions(transactions)
+    valid_statuses = {"EXECUTED", "CANCELED", "PENDING"}
 
-    valid_statuses = ["EXECUTED", "CANCELED", "PENDING"]
     while True:
         print(
-"""Программа: Введите статус, по которому необходимо выполнить фильтрацию. 
+            """Программа: Введите статус, по которому необходимо выполнить фильтрацию.
 Доступные для фильтрации статусы: EXECUTED, CANCELED, PENDING"""
         )
         status = input("Пользователь: ").strip().upper()
         if status in valid_statuses:
             filtered = filter_by_status(transactions, status)
             break
-        else:
-            print(f'Программа: Статус операции "{status}" недоступен.')
+        print(f'Программа: Статус операции "{status}" недоступен.')
 
     if not filtered:
         print("Программа: После фильтрации по статусу не осталось транзакций.")
         return
 
     sort_by_date = input("Программа: Отсортировать операции по дате? (да/нет)\nПользователь: ").strip().lower()
+
     if sort_by_date in ("да", "д", "yes", "y", "1"):
         while True:
             sort_order = (
-                input("Программа: Отсортировать по возрастанию или по убыванию?\nПользователь: ").strip().lower()
+                input("Программа: Отсортировать по возрастанию или по убыванию?\n" "Пользователь: ").strip().lower()
             )
-            if sort_order in ("по возрастанию", "возрастанию", "возрастание", "в"):
+
+            if sort_order in ("по возрастанию", "возрастанию", "в"):
                 filtered = sort_transactions(filtered, "по возрастанию")
                 break
-            elif sort_order in ("по убыванию", "убыванию", "убывание", "у"):
+            if sort_order in ("по убыванию", "убыванию", "у"):
                 filtered = sort_transactions(filtered, "по убыванию")
                 break
-            else:
-                print('Программа: Пожалуйста, введите "по возрастанию" или "по убыванию"')
+            print('Программа: Введите "по возрастанию" или "по убыванию".')
 
     rub_only = input("Программа: Выводить только рублевые транзакции? (да/нет)\nПользователь: ").strip().lower()
+
     if rub_only in ("да", "д", "yes", "y", "1"):
         filtered = filter_rub(filtered)
 
@@ -211,10 +210,11 @@ def main() -> None:
         return
 
     search_filter = (
-        input("Программа: Отфильтровать список транзакций по определенному слову в описании? (да/нет)\nПользователь: ")
+        input("Программа: Отфильтровать список транзакций по слову в описании? (да/нет)\n" "Пользователь: ")
         .strip()
         .lower()
     )
+
     if search_filter in ("да", "д", "yes", "y", "1"):
         keyword = input("Программа: Введите слово для поиска в описании:\nПользователь: ").strip()
         if keyword:

@@ -26,6 +26,7 @@ line-length = 119
 exclude = '\.git'
 
 [tool.isort]
+skip = ["tests/test_external_api.py", "tests/test_transactions.py", "venv"]
 line_length = 119
 multi_line_output = 3
 

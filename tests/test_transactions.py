@@ -1,19 +1,19 @@
-import pytest
 import json
-from unittest.mock import mock_open, patch, MagicMock
+from unittest.mock import MagicMock, mock_open, patch
 
+import pytest
 
 # Импортируем функции из твоего модуля
 from src.transactions import (
-    read_json,
-    read_csv,
+    filter_by_status,
+    filter_rub,
     normalize_transaction,
     normalize_transactions,
-    filter_by_status,
-    sort_transactions,
-    filter_rub,
-    process_bank_search,
     print_transactions,
+    process_bank_search,
+    read_csv,
+    read_json,
+    sort_transactions
 )
 
 
@@ -232,4 +232,4 @@ def sample_csv_transactions():
 
 if __name__ == "__main__":
 
-    pytest.main([__file__, "-v"])
+    ([__file__, "-v"])
